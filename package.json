@@ -1,0 +1,44 @@
+{
+    "name": "clustedis",
+    "version": "0.0.1",
+    "description": "Node cluster client for the official cluster support targeted for Redis 3.0.",
+    "scripts": {
+        "test": "gulp test"
+    },
+    "authors": [
+        "Hunts Chen <hunts.c@hotmail.com>"
+    ],
+    "keywords" : [
+        "redis",
+        "redis cluster",
+        "redis client",
+        "redis pool",
+        "node redis"
+    ],
+    "homepage": "https://github.com/hunts/clustedis",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:hunts/clustedis.git"
+    },
+    "bugs": {
+        "url": "https://github.com/hunts/clustedis/issues"
+    },
+    "engines": {
+        "node": ">= 0.11.2"
+    },
+    "dependencies": {
+        "generic-pool": "2.2.0",
+        "redis": "^0.12.1",
+        "underscore": "^1.8.2",
+        "when": "^3.7.2"
+    },
+    "devDependencies": {
+        "gulp": "^3.8.11",
+        "gulp-jshint": "^1.9.4",
+        "gulp-mocha": "^2.0.0",
+        "gulp-sequence": "^0.3.2",
+        "mocha": "^2.2.1",
+        "chai": "^2.2.0"
+    },
+    "license" : "MIT"
+}
