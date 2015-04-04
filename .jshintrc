@@ -1,0 +1,15 @@
+{
+  "globals"   : {
+    /* MOCHA */
+    "describe"   : false,
+    "it"         : false,
+    "before"     : false,
+    "beforeEach" : false,
+    "after"      : false,
+    "afterEach"  : false
+  },
+
+  "browser": true,
+  "devel": true,
+  "node": true
+}

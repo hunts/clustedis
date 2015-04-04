@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var ClusterClient = require('client');
+var ClusterClient = require('./lib/client');
 
 var DEFAULT_PORT = 6379;
 var DEFAULT_HOST = '127.0.0.1';
@@ -52,13 +52,13 @@ exports.createClient = function(host, port, options) {
     }
 
     options = options || {};
-    options.debugMode = !!options.debugMode;
-    options.returnBuffers = !!options.returnBuffers;
-    options.authPass = (options.authPass || '') + '';
-    options.keepAlive = options.keepAlive == null ? true : !!options.keepAlive;
+    options.debug_mode = !!options.debug_mode;
+    options.return_buffers = !!options.return_buffers;
+    options.auth_pass = (options.auth_pass || '') + '';
+    options.keep_alive = options.keep_alive === null ? true : !!options.keep_alive;
 
     return new ClusterClient(addressArray, options);
-}
+};
 
 /**
  *
