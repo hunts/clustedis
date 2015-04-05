@@ -10,54 +10,60 @@ var DEFAULT_HOST = '127.0.0.1';
  *  {host:string, port:number}
  *  ...
  *  {host:string, port:number}
- * ], options
+ * ], redisOptions, poolOptions
  * OR
  * [
  *  host:port
  *  ...
  *  host:port
- * ], options
+ * ], redisOptions, poolOptions
  * OR
- * {host:string, port:number}, options
+ * {host:string, port:number}, redisOptions, poolOptions
  * OR
- * host, port, options
+ * host, port, redisOptions, poolOptions
  * OR
- * port, options
+ * port, redisOptions, poolOptions
  *
  * @param host
  * @param port
- * @param options
+ * @param redisOptions
+ * @param poolOptions
  */
-exports.createClient = function(host, port, options) {
+exports.createClient = function(host, port, redisOptions, poolOptions) {
     var addressArray;
     if(Array.isArray(host)) {
         addressArray = normalizeNetAddress(host);
-        options = port;
+        poolOptions = redisOptions;
+        redisOptions = port;
     } else if(typeof host === 'string') {
         if(typeof port === 'number' || typeof port === 'string') {
             addressArray = [{host:host, port: +port}];
         } else {
             addressArray = normalizeNetAddress([host]);
-            options = host;
+            poolOptions = port;
+            redisOptions = host;
         }
     } else if(typeof host === 'number') {
         addressArray = [{host: DEFAULT_HOST, port: host}];
-        options = port;
+        poolOptions = redisOptions;
+        redisOptions = port;
     } else if(typeof host === 'object' && host.host && host.port) {
         addressArray = [host];
-        options = port;
+        poolOptions = redisOptions;
+        redisOptions = port;
     } else {
-        options = host;
+        poolOptions = port;
+        redisOptions = host;
         addressArray = [{host: DEFAULT_HOST, port: DEFAULT_PORT }];
     }
 
-    options = options || {};
-    options.debug_mode = !!options.debug_mode;
-    options.return_buffers = !!options.return_buffers;
-    options.auth_pass = (options.auth_pass || '') + '';
-    options.keep_alive = options.keep_alive === null ? true : !!options.keep_alive;
+    redisOptions = redisOptions || {};
+    redisOptions.debug_mode = !!redisOptions.debug_mode;
+    redisOptions.return_buffers = !!redisOptions.return_buffers;
+    redisOptions.auth_pass = (redisOptions.auth_pass || '') + '';
+    redisOptions.keep_alive = redisOptions.keep_alive === null ? true : !!redisOptions.keep_alive;
 
-    return new ClusterClient(addressArray, options);
+    return new ClusterClient(addressArray, redisOptions, poolOptions);
 };
 
 /**
