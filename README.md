@@ -1,12 +1,15 @@
-[![build status](https://api.travis-ci.org/hunts/clustedis.png)](https://travis-ci.org/hunts/clustedis)
-clustedis - a node.js redis cluster client
-============================================
+[![build status][travis-image]][travis-url]
+
+A node.js redis cluster client
+
 # About
   This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on node_redis and node-pool.
 
 ## Installation
 
-    $ npm install clustedis (not available for now)
+```bash
+    $ npm install clustedis
+```
 
 ## Example
 
@@ -32,8 +35,12 @@ client.get('a key', function(err, result) {
 
 ## Run Tests
 
-    $ npm install -g gulp
-    $ gulp test
+  To run the test suite, first install the dependencies, then run `npm test`:
+
+```bash
+$ npm install
+$ npm test
+```
 
 ## LICENSE - "MIT License"
 
@@ -59,3 +66,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+[travis-image]: https://api.travis-ci.org/hunts/clustedis.svg
+[travis-url]: https://travis-ci.org/hunts/clustedis
