@@ -1,6 +1,6 @@
 {
     "name": "clustedis",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Node.js Redis cluster client for the official cluster support targeted for Redis 3.0",
     "scripts": {
         "test": "gulp test"
@@ -9,11 +9,11 @@
         "Hunts Chen <hunts.c@gmail.com>"
     ],
     "keywords" : [
-        "redis",
-        "redis cluster",
         "redis client",
-        "redis pool",
-        "node redis"
+        "redis cluster",
+        "redis cluster client",
+        "node redis",
+        "node.js redis"
     ],
     "homepage": "https://github.com/hunts/clustedis",
     "repository": {

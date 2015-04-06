@@ -1,14 +1,12 @@
 [![build status][travis-image]][travis-url]
 
-A node.js redis cluster client
-
 # About
-  This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on node_redis and node-pool.
+  This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis) and generic-pool(node-pool).
 
 ## Installation
 
 ```bash
-    $ npm install clustedis
+$ npm install clustedis
 ```
 
 ## Example
