@@ -1,7 +1,7 @@
 {
     "name": "clustedis",
     "version": "0.0.1",
-    "description": "Node cluster client for the official cluster support targeted for Redis 3.0.",
+    "description": "Redis cluster client of node for the official cluster support targeted for Redis 3.0.",
     "scripts": {
         "test": "gulp test"
     },
