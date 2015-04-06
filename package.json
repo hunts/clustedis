@@ -6,7 +6,7 @@
         "test": "gulp test"
     },
     "authors": [
-        "Hunts Chen <hunts.c@hotmail.com>"
+        "Hunts Chen <hunts.c@gmail.com>"
     ],
     "keywords" : [
         "redis",
