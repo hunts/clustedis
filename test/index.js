@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 var redis = require('../index');
 var bareRedis = require('redis');
 
-describe('Cluster Client Tests', function() {
+describe('Cluster Client Tests: ', function() {
 
     var client;
 
@@ -24,7 +24,7 @@ describe('Cluster Client Tests', function() {
         it('MOVED Redirection', function() {
             var redis = bareRedis.createClient(30001, '192.168.139.132');
             redis.on('ready', function() {
-                redis.get('key-redirection', function(err) {
+                redis.get('key_redirection', function(err) {
                     expect(err).is.exist;
                     expect(err.message).to.have.string('MOVED');
                 });

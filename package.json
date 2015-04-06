@@ -28,9 +28,7 @@
     },
     "dependencies": {
         "generic-pool": "2.2.0",
-        "redis": "^0.12.1",
-        "underscore": "^1.8.2",
-        "when": "^3.7.2"
+        "redis": "^0.12.1"
     },
     "devDependencies": {
         "gulp": "^3.8.11",
