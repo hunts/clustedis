@@ -37,7 +37,7 @@ client.get('a key', function(err, result) {
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2015 Hunts CHen, http://idf.tf/
+Copyright (c) 2015 Hunts Chen, http://idf.tf/
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
