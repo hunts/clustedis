@@ -16,14 +16,14 @@ $ npm install clustedis
 ```js
 var redis = require('clustedis');
 
-// Should at lease provider one redis server address.
+// Should at lease provide one redis server address.
 // Other servers will be found via this server.
 var client = redis.createClient('127.0.0.1', 30001, {
     debug_mode: false
 });
 ```
 
-### Step 2 - Use client in your code to ready/write data
+### Step 2 - Use client in your code to read/write data
 
 ```js
 client.get('a key', function(err, result) {

@@ -9,11 +9,11 @@
         "Hunts Chen <hunts.c@gmail.com>"
     ],
     "keywords" : [
-        "redis client",
-        "redis cluster",
-        "redis cluster client",
-        "node redis",
-        "node.js redis"
+        "node",
+        "redis",
+        "cluster",
+        "client",
+        "pool"
     ],
     "homepage": "https://github.com/hunts/clustedis",
     "repository": {
