@@ -133,5 +133,3 @@ travis-install:
 	make -C redis-git -j4
 	gem install redis
 	sleep 3
-	npm install -g gulp
-	sleep 3
