@@ -9,6 +9,7 @@ before_install:
  - npm install gulp-sequence
  - npm install mocha
  - npm install chai
+ - npm install
 
 install: make travis-install
 

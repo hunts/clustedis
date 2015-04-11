@@ -123,6 +123,7 @@ travis-run:
 	# Run your tests/code here
 	# For example: py.test
 	#########
+	npm install
 	npm test
 
 	# Kill all redis nodes and do cleanup
