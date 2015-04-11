@@ -4,6 +4,7 @@ node_js:
 
 before_install:
  - npm install -g gulp
+ - npm install gulp
 
 install: make travis-install
 
