@@ -11,7 +11,7 @@ describe('Cluster Client Tests: ', function() {
     var client;
 
     before(function(done) {
-        client = redis.createClient('192.168.139.132', 30001, {
+        client = redis.createClient('127.0.0.1', 7000, {
             debug_mode: false
         });
 
@@ -22,7 +22,7 @@ describe('Cluster Client Tests: ', function() {
 
     describe('bare node redis', function() {
         it('MOVED Redirection', function() {
-            var redis = nodeRedis.createClient(30001, '192.168.139.132');
+            var redis = nodeRedis.createClient(7000, '127.0.0.1');
             redis.on('ready', function() {
                 redis.get('key_redirection', function(err) {
                     expect(err).is.exist;

@@ -3,8 +3,13 @@
 # About
   This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis) and generic-pool(node-pool).
 
-## Installation
+# Important
+  This client is still under development. Neither all planned features have been implemented, nor tests covered.
 
+  It couldn't be used in any production application until 0.1.0 released.
+
+## Installation
+n
 ```bash
 $ npm install clustedis
 ```
