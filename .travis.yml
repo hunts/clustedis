@@ -2,15 +2,6 @@ language: node_js
 node_js:
  - "0.11"
 
-before_install:
- - npm install gulp
- - npm install gulp-jshint
- - npm install gulp-mocha
- - npm install gulp-sequence
- - npm install mocha
- - npm install chai
- - npm install
-
 install: make travis-install
 
 script: make travis-run

@@ -6,12 +6,15 @@ var expect = require('chai').expect;
 var redis = require('../index');
 var nodeRedis = require('redis');
 
+var entryHost = '127.0.0.1';
+var entryPort = 7000;
+
 describe('Cluster Client Tests: ', function() {
 
     var client;
 
     before(function(done) {
-        client = redis.createClient('127.0.0.1', 7000, {
+        client = redis.createClient(entryHost, entryPort, {
             debug_mode: false
         });
 
@@ -22,11 +25,13 @@ describe('Cluster Client Tests: ', function() {
 
     describe('bare node redis', function() {
         it('MOVED Redirection', function() {
-            var redis = nodeRedis.createClient(7000, '127.0.0.1');
+            var redis = nodeRedis.createClient(entryPort, entryHost);
             redis.on('ready', function() {
                 redis.get('key_redirection', function(err) {
                     expect(err).is.exist;
                     expect(err.message).to.have.string('MOVED');
+                    redis.end();
+                    redis = null;
                 });
             });
         });
