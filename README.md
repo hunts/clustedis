@@ -9,7 +9,7 @@
   It couldn't be used in any production application until 0.1.0 released.
 
 ## Installation
-n
+
 ```bash
 $ npm install clustedis
 ```
