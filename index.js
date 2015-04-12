@@ -68,14 +68,16 @@ exports.createClient = function(host, port, redisOptions, poolOptions) {
 
 /**
  *
- * @param array
- * @returns {*|Array}
+ * @param {Array} array
+ * @returns {Object|Array}
  */
 function normalizeNetAddress(array) {
     return array.map(function(addr) {
         if(typeof addr === 'string') {
             var arr = addr.split(':');
             return {host: arr[0], port: +arr[1]};
+        } else if(Array.isArray(addr)) {
+            return {host: addr[0], port: +addr[1]};
         }
 
         return {host: addr.host, port: +addr.port};

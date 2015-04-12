@@ -8,18 +8,49 @@ var redis = require('../index');
 var entryNodes = [
     {host: "127.0.0.1", port: 7000}, // One live node of Travis CI redis cluster
     {host: "127.0.0.1", port: 7009}, // One non-existing node of Travis CI redis cluster
-    {host: "192.168.139.132", port: 30001} // This is Hunts' development environment.
 ];
 
-describe('Cluster Client Tests: ', function() {
+describe('create client in different ways: ', function() {
+
+    it('single live node', function (done) {
+        var client = redis.createClient('127.0.0.1', 7000);
+        client.on('ready', function () {
+            done();
+            client.close();
+        });
+    });
+
+    it('multi nodes array-array', function (done) {
+        var client = redis.createClient([['127.0.0.1', 7000], ['127.0.0.1', 7009]]);
+        client.on('ready', function () {
+            done();
+            client.close();
+        });
+    });
+
+    it('multi nodes object-array', function (done) {
+        var client = redis.createClient([{host: '127.0.0.1', port: 7000}, {host: '127.0.0.1', port: 7009}]);
+        client.on('ready', function () {
+            done();
+            client.close();
+        });
+    });
+
+    it('multi nodes string-array', function (done) {
+        var client = redis.createClient(['127.0.0.1:7000', '127.0.0.1:7009']);
+        client.on('ready', function () {
+            done();
+            client.close();
+        });
+    });
+});
+
+describe('cluster command tests: ', function() {
 
     var client;
 
     before(function(done) {
-        client = redis.createClient(entryNodes, {
-            debug_mode: false
-        });
-
+        client = redis.createClient(entryNodes);
         client.on('ready', function() {
             done();
         });

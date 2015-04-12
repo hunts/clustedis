@@ -21,12 +21,19 @@ $ npm install clustedis
 ```js
 var redis = require('clustedis');
 
-// Should at lease provide one redis server address.
-// Other servers will be found via this server.
-var client = redis.createClient('127.0.0.1', 30001, {
-    debug_mode: false
-});
+// Other node(s) in the cluster can be discovered by this node.
+var client = redis.createClient('127.0.0.1', 7000);
 ```
+
+A redis cluster always contains more than one node. The cluster can be initialized by providing a node list.
+
+```js
+var redis = require('clustedis');
+
+// Other node(s) in the cluster not provided explicitly can be discovered by these node.
+var client = redis.createClient(['127.0.0.1:7000', '127.0.0.1:7001']);
+```
+
 
 ### Step 2 - Use client in your code to read/write data
 
