@@ -4,36 +4,24 @@
 
 var expect = require('chai').expect;
 var redis = require('../index');
-var nodeRedis = require('redis');
 
-var entryHost = '127.0.0.1';
-var entryPort = 7000;
+var entryNodes = [
+    {host: "127.0.0.1", port: 7000}, // One live node of Travis CI redis cluster
+    {host: "127.0.0.1", port: 7009}, // One non-existing node of Travis CI redis cluster
+    {host: "192.168.139.132", port: 30001} // This is Hunts' development environment.
+];
 
 describe('Cluster Client Tests: ', function() {
 
     var client;
 
     before(function(done) {
-        client = redis.createClient(entryHost, entryPort, {
+        client = redis.createClient(entryNodes, {
             debug_mode: false
         });
 
         client.on('ready', function() {
             done();
-        });
-    });
-
-    describe('bare node redis', function() {
-        it('MOVED Redirection', function() {
-            var redis = nodeRedis.createClient(entryPort, entryHost);
-            redis.on('ready', function() {
-                redis.get('key_redirection', function(err) {
-                    expect(err).is.exist;
-                    expect(err.message).to.have.string('MOVED');
-                    redis.end();
-                    redis = null;
-                });
-            });
         });
     });
 
