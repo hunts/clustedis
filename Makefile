@@ -1,3 +1,6 @@
+# Makefile adapted from Grokzen's example repo
+# https://github.com/Grokzen/travis-redis-cluster
+
 PATH := ./redis-git/src:${PATH}
 
 # CLUSTER REDIS NODES
@@ -119,10 +122,7 @@ travis-run:
 	echo "yes" | ruby redis-git/src/redis-trib.rb create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
 	sleep 5
 
-	#########
 	# Run your tests/code here
-	# For example: py.test
-	#########
 	npm install
 	npm test
 

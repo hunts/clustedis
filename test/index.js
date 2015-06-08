@@ -182,6 +182,49 @@ describe('cluster command tests: ', function() {
         });
     });
 
+    describe('server unavailable', function() {
+        it('master dead', function(done) {
+            this.timeout(60000);
+            var times = 0;
+            var _willFaultClient;
+            var _releaseFaultClient;
+            var i = setInterval(
+                function() {
+                    times += 1;
+                    console.log('set a key ... ' + times);
+                    client.set('a key', 'a value', function(err, res) {
+                        console.log(err, res);
+                        expect(res).to.be.equal('OK');
+                    });
+
+                    if(times === 1) {
+                        _releaseFaultClient = client.getNode('a key', function(err, nodeClient) {
+                            _willFaultClient = nodeClient;
+                            console.log('get a client of node: %s', _willFaultClient.connectionOption)
+                            _willFaultClient.on('error', function() {
+                                console.log('connection error %s', _willFaultClient.connectionOption);
+                                _releaseFaultClient(_willFaultClient);
+                                done();
+                            });
+                            /*
+                            nodeClient.debug('SEGFAULT', function(err, res) {
+                                expect(err).to.be.an.instanceOf(Error);
+                            });
+                            */
+                        });
+                    }
+
+                    if(times === 10) {
+                        clearInterval(i);
+                        _releaseFaultClient(_willFaultClient);
+                        done();
+                    }
+
+                }, 1000
+            );
+        });
+    });
+
     after(function(done) {
         client.close(done);
     });
