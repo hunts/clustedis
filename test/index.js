@@ -50,7 +50,7 @@ describe('cluster command tests: ', function() {
     var client;
 
     before(function(done) {
-        client = redis.createClient(entryNodes, {debug_mode: false});
+        client = redis.createClient(entryNodes, {debug_mode: false}, { min: 2 });
         client.on('ready', function() {
             done();
         });
@@ -182,7 +182,7 @@ describe('cluster command tests: ', function() {
     describe('server unavailable', function() {
         
         it('master segfault', function(done) {
-            this.timeout(1500);
+            this.timeout(2000);
             var _releaseFaultClient = client.getSlotClient('a key', function(err, slotClient) {
                 slotClient.on('end', function() {
                     _releaseFaultClient(slotClient);
@@ -199,7 +199,7 @@ describe('cluster command tests: ', function() {
         });
    
         it('master recovery', function(done) {
-            this.timeout(6000);
+            this.timeout(4000);
             setTimeout(function() {
                 client.set('a key', 'a value', function(err, res) {
                     if (err) {
@@ -208,33 +208,8 @@ describe('cluster command tests: ', function() {
                     expect(res).to.be.equal('OK');
                     done();
                 });
-            }, 4000);
+            }, 3000);
         });
-        
-        /*
-        // please manually kill the progress in 30 seconds.
-        it('master killed', function(done) {
-            this.timeout(30000);
-            var killed = false
-            var flag = 'idle';
-            var i = setInterval(function() {
-                if(flag == 'working') {
-                    return;
-                }
-                flag = 'working';
-                client.set('a key', 'a value', function(err, res) {
-                    if (!!err) {
-                        killed = true;
-                    } else if(killed) {
-                        expect(res).to.be.equal('OK');
-                        clearInterval(i);
-                        done();
-                    }
-                    flag = 'idle';
-                });
-            }, 100);
-        });
-        */
     });
 
     after(function(done) {
