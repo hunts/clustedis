@@ -200,7 +200,7 @@ describe('cluster command tests: ', function() {
    
         it('master recovery', function(done) {
             this.timeout(4000);
-            setTimeout(function() {   
+            setTimeout(function() {
                 client.set('a key', 'a value', function(err, res) {
                     if (err) {
                         console.log(err.toString());
