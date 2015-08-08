@@ -182,7 +182,7 @@ describe('cluster command tests: ', function() {
     describe('server unavailable', function() {
         
         it('master segfault', function(done) {
-            this.timeout(1000);
+            this.timeout(1500);
             var _releaseFaultClient = client.getSlotClient('a key', function(err, slotClient) {
                 slotClient.on('end', function() {
                     _releaseFaultClient(slotClient);
@@ -199,7 +199,7 @@ describe('cluster command tests: ', function() {
         });
    
         it('master recovery', function(done) {
-            this.timeout(4000);
+            this.timeout(6000);
             setTimeout(function() {
                 client.set('a key', 'a value', function(err, res) {
                     if (err) {
@@ -208,7 +208,7 @@ describe('cluster command tests: ', function() {
                     expect(res).to.be.equal('OK');
                     done();
                 });
-            }, 3000);
+            }, 4000);
         });
         
         /*
