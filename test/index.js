@@ -50,7 +50,7 @@ describe('cluster command tests: ', function() {
     var client;
 
     before(function(done) {
-        client = redis.createClient(entryNodes);
+        client = redis.createClient(entryNodes, {debug_mode: false});
         client.on('ready', function() {
             done();
         });
@@ -147,9 +147,6 @@ describe('cluster command tests: ', function() {
                 delete client.keySlotMap.key_redirection;
                 expect(err.message).to.have.string('MOVED');
                 steps -= 1;
-                if(steps === 0) {
-                    done();
-                }
             });
             client.get('key_redirection', function (err, res) {
                 expect(err).to.not.exist;
@@ -183,46 +180,61 @@ describe('cluster command tests: ', function() {
     });
 
     describe('server unavailable', function() {
-        it('master dead', function(done) {
-            this.timeout(60000);
-            var times = 0;
-            var _willFaultClient;
-            var _releaseFaultClient;
-            var i = setInterval(
-                function() {
-                    times += 1;
-                    console.log('set a key ... ' + times);
+        
+        it('master segfault', function(done) {
+            this.timeout(1000);
+            var _releaseFaultClient = client.getSlotClient('a key', function(err, slotClient) {
+                slotClient.on('end', function() {
+                    _releaseFaultClient(slotClient);
                     client.set('a key', 'a value', function(err, res) {
-                        console.log(err, res);
-                        expect(res).to.be.equal('OK');
+                        expect(err).to.be.an.instanceOf(Error);
+                        done();
                     });
-
-                    if(times === 1) {
-                        _releaseFaultClient = client.getNode('a key', function(err, nodeClient) {
-                            _willFaultClient = nodeClient;
-                            console.log('get a client of node: %s', _willFaultClient.connectionOption)
-                            _willFaultClient.on('error', function() {
-                                console.log('connection error %s', _willFaultClient.connectionOption);
-                                _releaseFaultClient(_willFaultClient);
-                                done();
-                            });
-                            /*
-                            nodeClient.debug('SEGFAULT', function(err, res) {
-                                expect(err).to.be.an.instanceOf(Error);
-                            });
-                            */
-                        });
+                });
+                
+                slotClient.debug('SEGFAULT', function(err, res) {
+                    expect(err).to.be.an.instanceOf(Error);
+                });
+            });
+        });
+   
+        it('master recovery', function(done) {
+            this.timeout(4000);
+            setTimeout(function() {   
+                client.set('a key', 'a value', function(err, res) {
+                    if (err) {
+                        console.log(err.toString());
                     }
-
-                    if(times === 10) {
+                    expect(res).to.be.equal('OK');
+                    done();
+                });
+            }, 3000);
+        });
+        
+        /*
+        // please manually kill the progress in 30 seconds.
+        it('master killed', function(done) {
+            this.timeout(30000);
+            var killed = false
+            var flag = 'idle';
+            var i = setInterval(function() {
+                if(flag == 'working') {
+                    return;
+                }
+                flag = 'working';
+                client.set('a key', 'a value', function(err, res) {
+                    if (!!err) {
+                        killed = true;
+                    } else if(killed) {
+                        expect(res).to.be.equal('OK');
                         clearInterval(i);
-                        _releaseFaultClient(_willFaultClient);
                         done();
                     }
-
-                }, 1000
-            );
+                    flag = 'idle';
+                });
+            }, 100);
         });
+        */
     });
 
     after(function(done) {
