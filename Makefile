@@ -7,7 +7,7 @@ PATH := ./redis-git/src:${PATH}
 define NODE1_CONF
 daemonize yes
 port 7000
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node1.pid
 logfile /tmp/redis_cluster_node1.log
 save ""
@@ -19,7 +19,7 @@ endef
 define NODE2_CONF
 daemonize yes
 port 7001
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node2.pid
 logfile /tmp/redis_cluster_node2.log
 save ""
@@ -31,7 +31,7 @@ endef
 define NODE3_CONF
 daemonize yes
 port 7002
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node3.pid
 logfile /tmp/redis_cluster_node3.log
 save ""
@@ -43,7 +43,7 @@ endef
 define NODE4_CONF
 daemonize yes
 port 7003
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node4.pid
 logfile /tmp/redis_cluster_node4.log
 save ""
@@ -55,7 +55,7 @@ endef
 define NODE5_CONF
 daemonize yes
 port 7004
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node5.pid
 logfile /tmp/redis_cluster_node5.log
 save ""
@@ -67,7 +67,7 @@ endef
 define NODE6_CONF
 daemonize yes
 port 7005
-cluster-node-timeout 5000
+cluster-node-timeout 1000
 pidfile /tmp/redis_cluster_node6.pid
 logfile /tmp/redis_cluster_node6.log
 save ""
