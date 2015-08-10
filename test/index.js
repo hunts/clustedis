@@ -72,6 +72,19 @@ describe('cluster command tests: ', function() {
             });
         });
     });
+    
+    describe('check whether a command is readonly or not', function() {
+        it('should get correct command type', function(done) {
+            for(var cmd in client.commands) {
+                if(client.commands[cmd][1][0] == 'readonly') {
+                    expect(client.isReadOnly(cmd)).to.be.true;
+                } else {
+                    expect(client.isReadOnly(cmd)).to.be.false;
+                }
+            }
+            done();
+        });
+    });
 
     describe('commands: get / set / del', function() {
 
@@ -178,7 +191,8 @@ describe('cluster command tests: ', function() {
             client.publish(channel, 'test message');
         });
     });
-
+    
+    /*
     describe('server unavailable', function() {
         
         it('master segfault', function(done) {
@@ -210,32 +224,8 @@ describe('cluster command tests: ', function() {
                 });
             }, 3000);
         });
-        
-        /*
-        // please manually kill the progress in 30 seconds.
-        it('master killed', function(done) {
-            this.timeout(30000);
-            var killed = false
-            var flag = 'idle';
-            var i = setInterval(function() {
-                if(flag == 'working') {
-                    return;
-                }
-                flag = 'working';
-                client.set('a key', 'a value', function(err, res) {
-                    if (!!err) {
-                        killed = true;
-                    } else if(killed) {
-                        expect(res).to.be.equal('OK');
-                        clearInterval(i);
-                        done();
-                    }
-                    flag = 'idle';
-                });
-            }, 100);
-        });
-        */
     });
+    */
 
     after(function(done) {
         client.close(done);
