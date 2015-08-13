@@ -219,11 +219,47 @@ describe('cluster command tests: ', function() {
         });
     });
     
-    describe('command: pipeling', function() {
+    describe('command: pipelining', function() {
 
-        it('should return PONE PONE PONE when send PING PING PING', function(done) {
-            // TODO...
-            done();
+        it('should return PONG PONG PONG when send PING PING PING', function(done) {
+            
+            var numberOfCallbacks = 4;
+            var ensureDone = function() {
+                numberOfCallbacks -= 1;
+                if (numberOfCallbacks === 0) {
+                    done();
+                }
+            }
+            
+            client.pipelined(function(pipeline) {
+                
+                pipeline.ping(function(err, res) {
+                    expect(err).to.not.exist;
+                    expect(res).to.be.equal('PONG');
+                    ensureDone();
+                })
+                .ping()
+                .ping(function(err, res) {
+                    expect(err).to.not.exist;
+                    expect(res).to.be.equal('PONG');
+                    ensureDone();
+                });
+                
+                pipeline.set('key1', 'value1', function(err, res) {
+                    expect(err).to.not.exist;
+                    expect(res).to.be.equal('OK');
+                    ensureDone();
+                });
+                
+                pipeline.set('key2', 'value2', function(err, res) {
+                    expect(err).to.not.exist;
+                    expect(res).to.be.equal('OK');
+                    ensureDone();
+                });
+                
+                // no callback
+                pipeline.set('key3', 'value3');
+            });
         });
     });
 
