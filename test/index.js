@@ -195,6 +195,31 @@ describe('cluster command tests: ', function() {
             }, 30);
         });
     });
+    
+    describe('command: trasactions', function() {
+
+        it('should return multiple results', function(done) {
+            client.multi()
+                .set('key1','value1')
+                .set('key2','value2')
+                .set('key3','value3')
+                .get('key1')
+                .get('key2')
+                .exec(function(err, replies) {
+                    replies.forEach(function(reply, index) {
+                        console.log('Reply ' + index + ':' + reply.toString());
+                    });
+                    done();
+                });
+        });
+    });
+    
+    describe('command: pipeling', function() {
+
+        it('should return PONE PONE PONE when send PING PING PING', function(done) {
+            // TODO...
+        });
+    });
 
 /*
 // still have some problem on release connections which made 'npm test' cannot exit.
