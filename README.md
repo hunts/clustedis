@@ -1,4 +1,6 @@
-[![build status][travis-image]][travis-url] [![Coverage Status](https://coveralls.io/repos/hunts/clustedis/badge.svg?branch=master&service=github)](https://coveralls.io/github/hunts/clustedis?branch=master)
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 # About
   This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis) and generic-pool(node-pool).
@@ -77,5 +79,9 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-[travis-image]: https://api.travis-ci.org/hunts/clustedis.svg
+[npm-url]: https://npmjs.org/package/clustedis
+[npm-image]: https://img.shields.io/npm/v/clustedis.svg
+[coveralls-url]: https://coveralls.io/github/hunts/clustedis?branch=master
+[coveralls-image]: https://coveralls.io/repos/hunts/clustedis/badge.svg?branch=master&service=github
 [travis-url]: https://travis-ci.org/hunts/clustedis
+[travis-image]: https://api.travis-ci.org/hunts/clustedis.svg
