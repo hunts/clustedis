@@ -3,7 +3,8 @@
     "version": "0.0.5",
     "description": "Node.js Redis cluster client for the official cluster implementation (by Redis 3.0)",
     "scripts": {
-        "test": "gulp test"
+        "test": "nyc gulp test",
+        "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "authors": [
         "Hunts Chen <hunts.c@gmail.com>"
@@ -36,7 +37,9 @@
         "gulp-mocha": "^2.0.0",
         "gulp-sequence": "^0.3.2",
         "mocha": "^2.2.1",
-        "chai": "^2.2.0"
+        "chai": "^2.2.0",
+        "nyc": "^3.1.0",
+        "coveralls": "^2.11.4"
     },
     "license" : "MIT"
 }
