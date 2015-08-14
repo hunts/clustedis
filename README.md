@@ -1,4 +1,4 @@
-[![build status][travis-image]][travis-url]
+[![build status][travis-image]][travis-url] [![Coverage Status](https://coveralls.io/repos/hunts/clustedis/badge.svg?branch=master&service=github)](https://coveralls.io/github/hunts/clustedis?branch=master)
 
 # About
   This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis) and generic-pool(node-pool).
