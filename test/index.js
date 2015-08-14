@@ -37,7 +37,7 @@ describe('create client in different ways: ', function() {
     });
 
     it('multi nodes string-array', function (done) {
-        var client = redis.createClient(['127.0.0.1:7000', '127.0.0.1:7009']);
+        var client = redis.createClient(['127.0.0.1:7000', '127.0.0.1:7001', '127.0.0.1:7009']);
         client.on('ready', function () {
             done();
             client.close();
@@ -280,8 +280,9 @@ describe('cluster command tests: ', function() {
                 });
             });
         });
+        
         it('master recovery', function(done) {
-            this.timeout(5000);
+            this.timeout(8000);
             setTimeout(function() {
                 client.set('a key', '', function(err, res) {
                     if (err) {
@@ -290,7 +291,7 @@ describe('cluster command tests: ', function() {
                     expect(res).to.be.equal('OK');
                     done();
                 });
-            }, 4000);
+            }, 6000);
         });
     });  
 */
