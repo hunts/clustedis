@@ -55,6 +55,16 @@ describe('cluster command tests: ', function() {
             done();
         });
     });
+    
+    describe('client helper functions', function() {
+        it('should get key table from args', function(done) {
+            var kt = client.findKeyTable('mset', ['key1', 'value1', 'key2', 'value2']);
+            expect(kt.count()).to.be.equal(2);
+            expect(kt.get(0)).to.be.equal('key1');
+            expect(kt.get(2)).to.be.equal('key2');
+            done();
+        });
+    });
 
     describe('redis server info', function() {
 

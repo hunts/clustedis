@@ -1,6 +1,6 @@
 {
     "name": "clustedis",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Node.js Redis cluster client for the official cluster implementation (by Redis 3.0)",
     "scripts": {
         "test": "nyc gulp test",
@@ -29,7 +29,8 @@
     },
     "dependencies": {
         "generic-pool": "2.2.0",
-        "redis": "^0.12.1"
+        "redis": "^0.12.1",
+        "hashmap": "^2.0.3"
     },
     "devDependencies": {
         "gulp": "^3.8.11",
