@@ -9,7 +9,7 @@ var entryNodes = [
     {host: "127.0.0.1", port: 7000}, // One live node of Travis CI redis cluster
     {host: "127.0.0.1", port: 7009}, // One non-existing node of Travis CI redis cluster
 ];
-
+/*
 describe('create client in different ways: ', function() {
 
     it('single live node', function (done) {
@@ -44,13 +44,22 @@ describe('create client in different ways: ', function() {
         });
     });
 });
-
+*/
 describe('cluster command tests: ', function() {
 
     var client;
 
     before(function(done) {
-        client = redis.createClient(entryNodes, {debug_mode: false}, { min: 2 /*, log: console.log */ });
+        client = redis.createClient(entryNodes,
+            {
+                debug_mode: false,
+                readSlave: 1
+            },
+            {
+                 min: 2 , log: false
+            }
+        );
+        
         client.on('ready', function() {
             done();
         });
@@ -187,21 +196,32 @@ describe('cluster command tests: ', function() {
         it('should publish success', function(done) {
             client.publish('test topic', 'test message', function(err, res) {
                 expect(err).to.not.exist;
-                expect(res).to.be.equal(1);
+                expect(res).to.be.equal(0);
                 done();
             });
         });
 
         it('should subscribe success', function(done) {
-            var channel = 'test topic';
+            var topic = 'test topic';
+            var msg = 'test message';
             
-            client.subscribe(channel, function(message) {
-                expect(message).to.be.equal('test message');
-                client.unsubscribe(channel, done);
+            client.subscribe(topic, function(err, res) {
+                expect(res[0]).to.be.equal('subscribe');
+                expect(res[1]).to.be.equal(topic);
+                expect(res[2]).to.be.equal(1);
+            });
+            
+            client.on('message', function(channel, message) {
+                expect(channel).to.be.equal(topic);
+                expect(message).to.be.equal(msg);
+                client.unsubscribe(topic, function(err, res) {
+                    expect(res).to.be.equal(topic);
+                    done();
+                });
             });
             
             setTimeout(function() {
-                client.publish(channel, 'test message');
+                client.publish(topic, msg);
             }, 30);
         });
     });
@@ -239,7 +259,7 @@ describe('cluster command tests: ', function() {
                 if (numberOfCallbacks === 0) {
                     done();
                 }
-            }
+            };
             
             client.pipelined(function(pipeline) {
                 
@@ -274,16 +294,16 @@ describe('cluster command tests: ', function() {
     });
 
 /*
-// still have some problem on release connections which made 'npm test' cannot exit.
+    // still have some problem on release connections which made 'npm test' cannot exit.
     describe('server unavailable', function() {
 
         it('master segfault', function(done) {
             this.timeout(2000);
-            var release = client.getSlotClient('a key', function(err, slotClient) {
+            var release = client.getSlotClient(false, 'a key', function(err, slotClient) {
                 slotClient.debug('SEGFAULT', function(err, res) {  
                     release(slotClient);             
                     expect(err).to.be.an.instanceOf(Error);
-                    client.set('a key', '', function(err, res) {
+                    client.set('a key', 'the value', function(err, res) {
                         expect(err).to.be.an.instanceOf(Error);
                         done();
                     });
@@ -291,21 +311,18 @@ describe('cluster command tests: ', function() {
             });
         });
         
-        it('master recovery', function(done) {
-            this.timeout(8000);
-            setTimeout(function() {
-                client.set('a key', '', function(err, res) {
-                    if (err) {
-                        console.log(err.toString());
+        it('read through slave', function(done) {
+            for(var i=0; i<5; i++) {
+                client.get('a key', function(err, res) {
+                    if (!err) {
+                        expect(res).to.be.equal('OK');
+                        done();
                     }
-                    expect(res).to.be.equal('OK');
-                    done();
                 });
-            }, 6000);
+            }
         });
     });  
 */
-
     /**
      * cleanup connections.
      */
