@@ -5,6 +5,8 @@ var ClusterClient = require('./lib/client');
 var DEFAULT_PORT = 6379;
 var DEFAULT_HOST = '127.0.0.1';
 
+exports.Client = ClusterClient;
+
 /**
  * [
  *  {host:string, port:number}
