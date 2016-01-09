@@ -3,8 +3,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 # About
-  This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis) and generic-pool(node-pool).
-
+  This is a Redis cluster client for the official cluster support (targeted for Redis 3.0) based on redis(node_redis).
 # Important
   This client is still under development. Neither all planned features have been implemented, nor tests covered.
 

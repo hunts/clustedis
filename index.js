@@ -12,49 +12,53 @@ exports.Client = ClusterClient;
  *  {host:string, port:number}
  *  ...
  *  {host:string, port:number}
- * ], redisOptions, poolOptions
+ * ], redisOptions
  * OR
  * [
  *  host:port
  *  ...
  *  host:port
- * ], redisOptions, poolOptions
+ * ], redisOptions
  * OR
- * {host:string, port:number}, redisOptions, poolOptions
+ * {host:string, port:number}, redisOptions
  * OR
- * host, port, redisOptions, poolOptions
+ * host, port, redisOptions
  * OR
- * port, redisOptions, poolOptions
+ * port, redisOptions
  *
  * @param host
  * @param port
  * @param redisOptions
- * @param poolOptions
+ * @param slaveMode
+ * @param logger
  */
-exports.createClient = function(host, port, redisOptions, poolOptions) {
+exports.createClient = function(host, port, redisOptions, slaveMode, logger) {
     var addressArray;
     if(Array.isArray(host)) {
         addressArray = normalizeNetAddress(host);
-        poolOptions = redisOptions;
+        logger = slaveMode;
+        slaveMode = redisOptions;
         redisOptions = port;
     } else if(typeof host === 'string') {
         if(typeof port === 'number' || typeof port === 'string') {
             addressArray = [{host:host, port: +port}];
         } else {
             addressArray = normalizeNetAddress([host]);
-            poolOptions = port;
+            logger = redisOptions;
+            slaveMode = port;
             redisOptions = host;
         }
     } else if(typeof host === 'number') {
         addressArray = [{host: DEFAULT_HOST, port: host}];
-        poolOptions = redisOptions;
         redisOptions = port;
     } else if(typeof host === 'object' && host.host && host.port) {
         addressArray = [host];
-        poolOptions = redisOptions;
+        logger = slaveMode;
+        slaveMode = redisOptions;
         redisOptions = port;
     } else {
-        poolOptions = port;
+        logger = redisOptions;
+        slaveMode = port;
         redisOptions = host;
         addressArray = [{host: DEFAULT_HOST, port: DEFAULT_PORT }];
     }
@@ -65,7 +69,7 @@ exports.createClient = function(host, port, redisOptions, poolOptions) {
     redisOptions.auth_pass = (redisOptions.auth_pass || '') + '';
     redisOptions.keep_alive = redisOptions.keep_alive === null ? true : !!redisOptions.keep_alive;
 
-    return new ClusterClient(addressArray, redisOptions, poolOptions);
+    return new ClusterClient(addressArray, redisOptions, slaveMode, logger);
 };
 
 /**

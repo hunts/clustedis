@@ -1,50 +1,47 @@
 'use strict';
 /*global describe, it, before, beforeEach, after, afterEach */
 /*jshint -W030 */
+/*jshint loopfunc:true */
 
 var expect = require('chai').expect;
 var redis = require('../index');
 
 var entryNodes = [
-    {host: "127.0.0.1", port: 7000}, // One live node of Travis CI redis cluster
-    {host: "127.0.0.1", port: 7009}, // One non-existing node of Travis CI redis cluster
+    {host: "127.0.0.1", port: 7000}, // One live node in redis cluster
+    {host: "127.0.0.1", port: 7009}, // One non-existing node in redis cluster
 ];
-/*
+
 describe('create client in different ways: ', function() {
 
     it('single live node', function (done) {
         var client = redis.createClient('127.0.0.1', 7000);
         client.on('ready', function () {
-            done();
-            client.close();
+            client.close(done);
         });
     });
 
     it('multi nodes array-array', function (done) {
         var client = redis.createClient([['127.0.0.1', 7000], ['127.0.0.1', 7009]]);
         client.on('ready', function () {
-            done();
-            client.close();
+            client.close(done);
         });
     });
 
     it('multi nodes object-array', function (done) {
         var client = redis.createClient([{host: '127.0.0.1', port: 7000}, {host: '127.0.0.1', port: 7009}]);
         client.on('ready', function () {
-            done();
-            client.close();
+            client.close(done);
         });
     });
 
     it('multi nodes string-array', function (done) {
         var client = redis.createClient(['127.0.0.1:7000', '127.0.0.1:7001', '127.0.0.1:7009']);
         client.on('ready', function () {
-            done();
-            client.close();
+            client.close(done);
         });
     });
 });
-*/
+
 describe('cluster command tests: ', function() {
 
     var client;
@@ -52,12 +49,9 @@ describe('cluster command tests: ', function() {
     before(function(done) {
         client = redis.createClient(entryNodes,
             {
-                debug_mode: false,
-                readSlave: 1
+                debug_mode: false
             },
-            {
-                 min: 2 , log: false
-            }
+            1
         );
         
         client.on('ready', function() {
@@ -68,7 +62,7 @@ describe('cluster command tests: ', function() {
     describe('client helper functions', function() {
         it('should get key table from args', function(done) {
             var kt = client.findKeyTable('mset', ['key1', 'value1', 'key2', 'value2']);
-            expect(kt.count()).to.be.equal(2);
+            expect(kt.size).to.be.equal(2);
             expect(kt.get(0)).to.be.equal('key1');
             expect(kt.get(2)).to.be.equal('key2');
             done();
@@ -174,13 +168,14 @@ describe('cluster command tests: ', function() {
 
         it('should key "key_redirection" cause redirection but finally success', function (done) {
             var steps = 2;
-            client.keySlotMap.key_redirection = 0;
+            var key = 'key_redirection';
+            client.keySlotMap.set(key, 0);
             client.once('redirection', function(err) {
-                delete client.keySlotMap.key_redirection;
+                client.keySlotMap.delete(key);
                 expect(err.message).to.have.string('MOVED');
                 steps -= 1;
             });
-            client.get('key_redirection', function (err, res) {
+            client.get(key, function (err, res) {
                 expect(err).to.not.exist;
                 expect(res).to.be.null;
                 steps -= 1;
@@ -228,7 +223,7 @@ describe('cluster command tests: ', function() {
     
     describe('command: trasactions', function() {
 
-        it('should return multiple results', function(done) {
+        it('should explicit exec works', function(done) {
             client.multi()
                 .set('key1','value1')
                 .set('key2','value2')
@@ -247,11 +242,24 @@ describe('cluster command tests: ', function() {
                     done();
                 });
         });
+        
+        it('should implicit exec works', function(done) {
+            client.multi(function(m) {
+                m.set('key1','value1')
+                .set('key2','value2')
+                .set('key3','value3')
+                .get('key1')
+                .get('key2')
+                .get('key3', function(err, res) {
+                    done();
+                });
+            });
+        });
     });
     
     describe('command: pipelining', function() {
 
-        it('should return PONG PONG PONG when send PING PING PING', function(done) {
+        it('should implicit exec works', function(done) {
             
             var numberOfCallbacks = 4;
             var ensureDone = function() {
@@ -291,38 +299,47 @@ describe('cluster command tests: ', function() {
                 pipeline.set('key3', 'value3');
             });
         });
-    });
-
-/*
-    // still have some problem on release connections which made 'npm test' cannot exit.
-    describe('server unavailable', function() {
-
-        it('master segfault', function(done) {
-            this.timeout(2000);
-            var release = client.getSlotClient(false, 'a key', function(err, slotClient) {
-                slotClient.debug('SEGFAULT', function(err, res) {  
-                    release(slotClient);             
-                    expect(err).to.be.an.instanceOf(Error);
-                    client.set('a key', 'the value', function(err, res) {
-                        expect(err).to.be.an.instanceOf(Error);
-                        done();
-                    });
-                });
+        
+        it('should explicit exec works', function(done) {
+            
+            var pipeline = client.pipelined();
+                
+            pipeline.ping(function(err, res) {
+                expect(err).to.not.exist;
+                expect(res).to.be.equal('PONG');
+            })
+            .ping()
+            .ping(function(err, res) {
+                expect(err).to.not.exist;
+                expect(res).to.be.equal('PONG');
+            });
+            
+            pipeline.set('key1', 'value1', function(err, res) {
+                expect(err).to.not.exist;
+                expect(res).to.be.equal('OK');
+            });
+            
+            pipeline.set('key2', 'value2', function(err, res) {
+                expect(err).to.not.exist;
+                expect(res).to.be.equal('OK');
+            });
+            
+            // no callback
+            pipeline.set('key3', 'value3');
+            
+            pipeline.exec(function(err, replies) {
+                expect(err).to.not.exist;
+                expect(replies[0]).to.be.equal('PONG');
+                expect(replies[1]).to.be.equal('PONG');
+                expect(replies[2]).to.be.equal('PONG');
+                expect(replies[3]).to.be.equal('OK');
+                expect(replies[4]).to.be.equal('OK');
+                expect(replies[5]).to.be.equal('OK');
+                done();
             });
         });
-        
-        it('read through slave', function(done) {
-            for(var i=0; i<5; i++) {
-                client.get('a key', function(err, res) {
-                    if (!err) {
-                        expect(res).to.be.equal('OK');
-                        done();
-                    }
-                });
-            }
-        });
-    });  
-*/
+    });
+
     /**
      * cleanup connections.
      */

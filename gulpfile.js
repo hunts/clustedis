@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-var gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
-    mocha = require('gulp-mocha'),
-    gulpSequence = require('gulp-sequence');
+var gulp = require('gulp');
+var jshint = require('gulp-jshint');
+var mocha = require('gulp-mocha');
+var gulpSequence = require('gulp-sequence');
 
 gulp.task('jshint', function () {
     return gulp.src(['*.js', 'lib/*.js', 'test/*.js'])
@@ -11,11 +11,18 @@ gulp.task('jshint', function () {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('mocha', function () {
-    return gulp.src('test/index.js', {read: false})
+gulp.task('client', function () {
+    return gulp.src('test/client.test.js', {read: false})
         .pipe(mocha({
-            timeout: 8000
+            timeout: 8000,
         }));
 });
 
-gulp.task('test', gulpSequence('jshint', 'mocha'));
+gulp.task('ha', function () {
+    return gulp.src('test/ha.test.js', {read: false})
+        .pipe(mocha({
+            timeout: 8000,
+        }));
+});
+
+gulp.task('test', gulpSequence('jshint', 'client', 'ha'));

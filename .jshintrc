@@ -9,7 +9,7 @@
     "afterEach"  : false
   },
 
-  "browser": true,
   "devel": true,
-  "node": true
+  "node": true,
+  "esnext": true
 }
