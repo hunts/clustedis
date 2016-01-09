@@ -1,5 +1,5 @@
 'use strict';
-/*global describe, it, before after */
+/*global describe, it, before, after, Buffer */
 /*jshint -W030 */
 
 var expect = require('chai').expect;
@@ -46,7 +46,12 @@ describe('lib/shardproxy.js', function() {
     
     describe('proxy object methods\' tests:', function() {
         var shard = new Shard(101, 200, {}, [{}]);
-        var proxy = shardproxy.create(shard, {}, 1, consolelogger);
+        var proxy;
+        
+        before(function(done) {
+            proxy = shardproxy.create(shard, {}, 1, consolelogger);
+            done();
+        });
         
         it('should accept slot in range', function(done) {
             expect(proxy.accept(101)).to.be.true;
@@ -60,6 +65,10 @@ describe('lib/shardproxy.js', function() {
             expect(proxy.accept(100)).to.be.false;
             expect(proxy.accept(201)).to.be.false;
             done();
+        });
+        
+        after(function(done) {
+            proxy.close(done);
         });
     });
 });
