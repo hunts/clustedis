@@ -11,6 +11,13 @@ gulp.task('jshint', function () {
         .pipe(jshint.reporter('default'));
 });
 
+gulp.task('shardproxy', function () {
+    return gulp.src('test/lib/shardproxy.test.js', {read: false})
+        .pipe(mocha({
+            timeout: 8000,
+        }));
+});
+
 gulp.task('client', function () {
     return gulp.src('test/client.test.js', {read: false})
         .pipe(mocha({
@@ -25,4 +32,4 @@ gulp.task('ha', function () {
         }));
 });
 
-gulp.task('test', gulpSequence('jshint', 'client', 'ha'));
+gulp.task('test', gulpSequence('jshint', 'shardproxy', 'client', 'ha'));

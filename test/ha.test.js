@@ -1,7 +1,6 @@
 'use strict';
 /*global describe, it, before, beforeEach, after, afterEach */
 /*jshint -W030 */
-/*jshint loopfunc:true */
 
 var expect = require('chai').expect;
 var redis = require('../index');
