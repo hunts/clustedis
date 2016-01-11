@@ -73,7 +73,7 @@ describe('cluster command tests: ', function() {
 
         it('should get redis info', function(done) {
             client.info(function(err, res) {
-                expect(res).to.have.string('redis_version:3');
+                expect(res).to.have.string('redis_version:');
                 done();
             });
         });
